@@ -9,22 +9,23 @@
     <link rel="stylesheet" href="stylesheets/style.css">
   </head>
 
-  <body>
+  <body onload="listPosts()">
     <table>
       <tr>
-        <td>
+        <td colspan="2">
           <h1 id="message">RefArch Demo Blog Application</h1>
+        </td>
+      </tr>
+      <tr>
+        <td>
+            <div id="bloglist" style="width: 300px; height: 400px"></div>
+        </td>
+        <td height="300">
           <form>
             <input type="text" id="btitle" name="title" placeholder="Enter Blog Title"/>
             <input type="text" id="bname" name="abstract" placeholder="Enter Blog Abstract"/>
             <input type="text" id="bbody" name="body" placeholder="Enter Blog Body"/>
             <button type="button" onclick="addPost()" value="Click here to submit the form">Add a blog post</button>
-          </form>
-        </td>
-        <td>
-          <form>
-            <button type="button" onclick="listPosts()" value="Click here to retrieve the list of posts">List Existing Posts</button>
-            <textarea id="blist" name="list" rows="12" cols="50"></textarea>
           </form>
         </td>
       </tr>
@@ -60,7 +61,6 @@ function addPost() {
 </script>
 <script>
 function listPosts() {
-  document.getElementById("blist").value = " "
   console.log("listposts");
   axios.get(
     "https://service.us.apiconnect.ibmcloud.com/gws/apigateway/api/0c8f59e1d1d5405e25c88917bb965b2defd073b8ed3b5717183d253c13758c1a/api/listPosts", {
@@ -70,12 +70,12 @@ function listPosts() {
     .then(function (response) {
     console.log(response);
     var blogList = JSON.parse(response.data.msg.body);
-    var blogListText = "";
+    var blogListText = "Previous Posts<br/><br/>";
     for ( var i=0;i<blogList.docs.length;i++)
       {
-        blogListText = blogListText + "title: " + blogList.docs[i].title + "\n" + "abstract: " + blogList.docs[i].abstract + "\n\n";
+        blogListText = blogListText + "title: " + blogList.docs[i].title + "<br/>" + "abstract: " + blogList.docs[i].abstract + "<br/><br/>";
       };
-    document.getElementById("blist").value = blogListText;
+    document.getElementById("bloglist").innerHTML = blogListText;
     })
     .catch(function (error) {
     console.log(error);
